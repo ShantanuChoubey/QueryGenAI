@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import authRouter from './routes/auth.js';
+import sqlRouter from './routes/sql.js';
 
 const app = express();
 
@@ -22,6 +23,9 @@ apiRouter.get('/health', (req, res) => {
 
 // Register auth routes
 apiRouter.use('/auth', authRouter);
+
+// Register sql routes
+apiRouter.use('/sql', sqlRouter);
 
 // Mount routes under /api/v1
 app.use('/api/v1', apiRouter);
