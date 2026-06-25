@@ -16,7 +16,11 @@
     "backend:build": "npm run build -w backend",
     "lint": "npm run lint -w frontend && npm run lint -w backend",
     "format": "npm run format -w frontend && npm run format -w backend",
-    "format:check": "npm run format:check -w frontend && npm run format:check -w backend"
+    "format:check": "npm run format:check -w frontend && npm run format:check -w backend",
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "test:backend": "npm run test -w backend",
+    "test:frontend": "npm run test -w frontend",
+    "test:coverage": "npm run test -- --coverage"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

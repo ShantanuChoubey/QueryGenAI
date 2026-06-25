@@ -10,7 +10,9 @@
     "format": "prettier --write \"src/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.js\"",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
@@ -26,6 +28,8 @@
     "globals": "^15.14.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
-    "prisma": "^6.1.0"
+    "prisma": "^6.1.0",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.8"
   }
 }
