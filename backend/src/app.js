@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import authRouter from './routes/auth.js';
 import sqlRouter from './routes/sql.js';
+import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.use(express.json());
 
 // Main router definition
 const apiRouter = express.Router();
+
+// Apply general rate limiting across all API endpoints
+apiRouter.use(generalLimiter);
 
 // Health check endpoint under global prefix: /api/v1/health
 apiRouter.get('/health', (req, res) => {
@@ -24,8 +28,8 @@ apiRouter.get('/health', (req, res) => {
 // Register auth routes
 apiRouter.use('/auth', authRouter);
 
-// Register sql routes
-apiRouter.use('/sql', sqlRouter);
+// Register sql routes with specific AI rate limiter
+apiRouter.use('/sql', aiLimiter, sqlRouter);
 
 // Mount routes under /api/v1
 app.use('/api/v1', apiRouter);
