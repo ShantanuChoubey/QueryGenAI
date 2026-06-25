@@ -1,4 +1,5 @@
 import { registerUser, loginUser } from '../services/auth.js';
+import { successResponse } from '../utils/apiResponse.js';
 
 /**
  * Handle user registration requests.
@@ -8,11 +9,7 @@ export const register = async (req, res, next) => {
     const { email, password, fullName } = req.body;
     const user = await registerUser({ email, password, fullName });
 
-    return res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      user,
-    });
+    return successResponse(res, 201, 'User registered successfully', { user });
   } catch (error) {
     next(error);
   }
@@ -26,8 +23,7 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
     const data = await loginUser({ email, password });
 
-    return res.status(200).json({
-      success: true,
+    return successResponse(res, 200, 'Authentication successful', {
       token: data.token,
       user: data.user,
     });
@@ -41,8 +37,7 @@ export const login = async (req, res, next) => {
  */
 export const me = async (req, res, next) => {
   try {
-    return res.status(200).json({
-      success: true,
+    return successResponse(res, 200, 'Profile retrieved successfully', {
       user: req.user,
     });
   } catch (error) {
