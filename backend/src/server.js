@@ -1,11 +1,11 @@
-import 'dotenv/config';
+import { env } from './config/env.js';
 import app from './app.js';
 
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
 const server = app.listen(PORT, () => {
   console.log(
-    `🚀 QueryGenAI Server listening on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`
+    `🚀 QueryGenAI Server listening on port ${PORT} in ${env.NODE_ENV} mode`
   );
   console.log(`🔗 Healthcheck available at: http://localhost:${PORT}/api/v1/health`);
 });
