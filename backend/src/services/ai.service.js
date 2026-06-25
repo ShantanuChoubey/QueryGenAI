@@ -1,6 +1,8 @@
 import { getSanitizedSchema } from './schema.js';
 import { buildPrompt } from './promptBuilder.js';
 import { callLlama } from './llama.service.js';
+import { validateQueries } from './sqlValidator.service.js';
+import { recommendQuery } from './queryRecommendation.service.js';
 
 /**
  * Coordinate generation of SQL query alternatives from natural language.
@@ -35,5 +37,9 @@ CRITICAL FORMATTING INSTRUCTIONS:
     throw new Error('Invalid query format received from AI provider');
   }
 
-  return result.queries;
+  // 5. Pass through local SQL validation check rules
+  const validated = validateQueries(result.queries);
+
+  // 6. Compute query recommendation scores and return recommended + alternatives
+  return recommendQuery(validated);
 }
