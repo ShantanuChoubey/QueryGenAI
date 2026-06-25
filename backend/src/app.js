@@ -4,11 +4,13 @@ import authRouter from './routes/auth.js';
 import sqlRouter from './routes/sql.js';
 import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
+import { requestLogger } from './middleware/requestLogger.js';
 
 const app = express();
 
-// Apply request ID middleware globally
+// Apply request ID and logger middlewares globally
 app.use(requestIdMiddleware);
+app.use(requestLogger);
 
 // Set up standard middlewares
 app.use(cors());
