@@ -1,0 +1,15 @@
+{
+  "name": "@querygen/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared code and types for SQL Query Generator",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "lint": "echo 'No lint script for shared package'",
+    "format": "prettier --write \"src/**/*.js\""
+  }
+}

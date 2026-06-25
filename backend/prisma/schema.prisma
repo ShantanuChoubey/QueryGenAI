@@ -1,0 +1,14 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: Models are not implemented here as per setup requirements.
+// You can define models here (e.g. User, QueryHistory) for future migrations.

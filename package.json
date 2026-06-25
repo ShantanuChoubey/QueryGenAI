@@ -1,0 +1,24 @@
+{
+  "name": "query-gen-ai",
+  "version": "1.0.0",
+  "description": "AI-Powered SQL Query Generator Monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"frontend,backend\" -c \"cyan,green\" \"npm run dev -w frontend\" \"npm run dev -w backend\"",
+    "frontend:dev": "npm run dev -w frontend",
+    "backend:dev": "npm run dev -w backend",
+    "frontend:build": "npm run build -w frontend",
+    "backend:build": "npm run build -w backend",
+    "lint": "npm run lint -w frontend && npm run lint -w backend",
+    "format": "npm run format -w frontend && npm run format -w backend",
+    "format:check": "npm run format:check -w frontend && npm run format:check -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

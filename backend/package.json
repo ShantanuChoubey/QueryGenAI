@@ -1,0 +1,29 @@
+{
+  "name": "@querygen/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\"",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "prisma": "^6.1.0"
+  }
+}
