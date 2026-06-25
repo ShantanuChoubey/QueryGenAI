@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import RiskBadge from './RiskBadge.jsx';
 
-export default function QueryAlternativeCard({ query }) {
+export default function QueryAlternativeCard({ query, onCopySuccess }) {
   const [copied, setCopied] = useState(false);
 
   if (!query) return null;
@@ -11,6 +11,9 @@ export default function QueryAlternativeCard({ query }) {
       await navigator.clipboard.writeText(query.sql);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      if (onCopySuccess) {
+        onCopySuccess();
+      }
     } catch (err) {
       console.error('Failed to copy query:', err);
     }
@@ -30,8 +33,9 @@ export default function QueryAlternativeCard({ query }) {
         <pre><code>{query.sql}</code></pre>
         <button
           onClick={handleCopy}
-          className="absolute top-2 right-2 p-1.5 rounded-md border border-slate-900 bg-slate-950 text-slate-500 hover:text-slate-200 transition duration-150 cursor-pointer"
+          className="absolute top-2 right-2 p-1.5 rounded-md border border-slate-900 bg-slate-950 text-slate-500 hover:text-slate-200 transition duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
           title="Copy SQL"
+          aria-label={`Copy Alternative SQL Query Ranked ${query.ranking}`}
         >
           {copied ? (
             <span className="text-[10px] font-semibold text-emerald-400 px-1">Copied!</span>
@@ -56,7 +60,7 @@ export default function QueryAlternativeCard({ query }) {
 
       {/* Blocked Reason details if query is blocked */}
       {query.riskLevel === 'BLOCKED' && query.blockedReason && (
-        <div className="rounded-lg border border-red-950 bg-red-950/20 p-2.5 text-[11px] text-red-400">
+        <div className="rounded-lg border border-red-950 bg-red-950/20 p-2.5 text-[11px] text-red-400" role="alert">
           ⚠️ {query.blockedReason}
         </div>
       )}
@@ -72,3 +76,4 @@ export default function QueryAlternativeCard({ query }) {
     </div>
   );
 }
+

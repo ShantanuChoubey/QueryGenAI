@@ -5,22 +5,31 @@ import GenerateButton from '../components/GenerateButton.jsx';
 import RecommendedQueryCard from '../components/RecommendedQueryCard.jsx';
 import QueryAlternativeCard from '../components/QueryAlternativeCard.jsx';
 import LoadingState from '../components/LoadingState.jsx';
-import FormError from '../components/FormError.jsx';
+import EmptyState from '../components/EmptyState.jsx';
+import ErrorCard from '../components/ErrorCard.jsx';
+import { useToast } from '../components/Toast.jsx';
 
 export default function SQLGeneratorPage() {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { showToast } = useToast();
+  
+  // States holding error information
+  const [errorMsg, setErrorMsg] = useState('');
+  const [errorDetails, setErrorDetails] = useState('');
+  const [requestId, setRequestId] = useState('');
   
   // States holding generated SQL outcomes
   const [recommended, setRecommended] = useState(null);
   const [alternatives, setAlternatives] = useState([]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!inputText.trim()) return;
 
-    setError('');
+    setErrorMsg('');
+    setErrorDetails('');
+    setRequestId('');
     setIsLoading(true);
     setRecommended(null);
     setAlternatives([]);
@@ -30,37 +39,47 @@ export default function SQLGeneratorPage() {
         query: inputText,
       });
 
-      if (response.data?.success && response.data?.queries) {
-        const { recommendedQuery, alternatives: altList } = response.data.queries;
+      const queries = response.data?.data || response.data?.queries;
+      if (response.data?.success && queries) {
+        const { recommendedQuery, alternatives: altList } = queries;
         setRecommended(recommendedQuery);
-        // Exclude the recommended query from alternatives list to prevent duplication if desired,
-        // or render all alternatives as returned. We will render all alternatives.
         setAlternatives(altList || []);
+        showToast('SQL alternatives generated successfully!', 'success');
       } else {
         throw new Error('Invalid query format received from server.');
       }
     } catch (err) {
       console.error('SQL generation failed:', err);
-      setError(err.message || 'An error occurred during query generation.');
+      const msg = err.response?.data?.message || err.message || 'An error occurred during query generation.';
+      const details = err.response?.data?.error || '';
+      const reqId = err.response?.data?.requestId || err.response?.headers?.['x-request-id'] || '';
+      setErrorMsg(msg);
+      setErrorDetails(typeof details === 'object' ? JSON.stringify(details, null, 2) : details);
+      setRequestId(reqId);
+      showToast(msg, 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleCopySuccess = () => {
+    showToast('SQL query copied to clipboard.', 'success');
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       {/* Page Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
           AI SQL Query Generator
         </h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-sm">
+        <p className="text-slate-400 max-w-xl mx-auto text-xs sm:text-sm">
           Submit prompts describing your database request in plain English to receive validation-checked PostgreSQL alternatives.
         </p>
       </div>
 
       {/* Input Form Section */}
-      <div className="bg-slate-900/35 border border-slate-900 rounded-2xl p-6 shadow-xl backdrop-blur-md">
+      <div className="bg-slate-900/35 border border-slate-900 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md">
         <form onSubmit={handleSubmit} className="space-y-4">
           <NaturalLanguageInput
             value={inputText}
@@ -69,16 +88,29 @@ export default function SQLGeneratorPage() {
             placeholder="e.g. Find all users who verified their email and registered in the last 14 days."
           />
 
-          <FormError message={error} />
-
           <div className="flex justify-end">
             <GenerateButton isLoading={isLoading} disabled={!inputText.trim()} />
           </div>
         </form>
       </div>
 
+      {/* Error state */}
+      {errorMsg && (
+        <ErrorCard
+          message={errorMsg}
+          errorDetails={errorDetails}
+          requestId={requestId}
+          onRetry={inputText.trim() ? handleSubmit : null}
+        />
+      )}
+
       {/* Loading Skeletal State */}
       {isLoading && <LoadingState />}
+
+      {/* Empty State before generation */}
+      {!isLoading && !recommended && alternatives.length === 0 && (
+        <EmptyState onSelectPrompt={(prompt) => setInputText(prompt)} />
+      )}
 
       {/* Query Outcomes Rendering Section */}
       {!isLoading && (recommended || alternatives.length > 0) && (
@@ -86,22 +118,26 @@ export default function SQLGeneratorPage() {
           {/* 1. Recommended Query Card */}
           {recommended && (
             <div className="space-y-3">
-              <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">
                 Best Suggestion
               </h2>
-              <RecommendedQueryCard query={recommended} />
+              <RecommendedQueryCard query={recommended} onCopySuccess={handleCopySuccess} />
             </div>
           )}
 
           {/* 2. Alternatives Choices List */}
           {alternatives.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">
                 SQL Query Alternatives
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {alternatives.map((alt, index) => (
-                  <QueryAlternativeCard key={index} query={alt} />
+                  <QueryAlternativeCard 
+                    key={index} 
+                    query={alt} 
+                    onCopySuccess={handleCopySuccess} 
+                  />
                 ))}
               </div>
             </div>
@@ -111,3 +147,4 @@ export default function SQLGeneratorPage() {
     </div>
   );
 }
+

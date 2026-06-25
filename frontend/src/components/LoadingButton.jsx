@@ -8,13 +8,13 @@ export default function LoadingButton({
   ...props
 }) {
   const baseStyle =
-    'w-full flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold transition duration-150 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:pointer-events-none';
+    'w-full flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold transition duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
   
   const variants = {
     primary:
-      'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 focus:ring-cyan-400',
+      'bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 focus-visible:ring-cyan-500',
     secondary:
-      'border border-slate-800 bg-slate-900 text-slate-100 hover:bg-slate-800/80 focus:ring-slate-700',
+      'border border-slate-800 bg-slate-900 text-slate-100 hover:bg-slate-800/80 focus-visible:ring-slate-700',
   };
 
   return (

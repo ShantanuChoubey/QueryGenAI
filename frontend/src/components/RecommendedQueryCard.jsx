@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import RiskBadge from './RiskBadge.jsx';
 
-export default function RecommendedQueryCard({ query }) {
+export default function RecommendedQueryCard({ query, onCopySuccess }) {
   const [copied, setCopied] = useState(false);
 
   if (!query) return null;
@@ -11,6 +11,9 @@ export default function RecommendedQueryCard({ query }) {
       await navigator.clipboard.writeText(query.sql);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      if (onCopySuccess) {
+        onCopySuccess();
+      }
     } catch (err) {
       console.error('Failed to copy query:', err);
     }
@@ -35,8 +38,9 @@ export default function RecommendedQueryCard({ query }) {
         <pre><code>{query.sql}</code></pre>
         <button
           onClick={handleCopy}
-          className="absolute top-2 right-2 p-1.5 rounded-md border border-slate-800 bg-slate-900 text-slate-400 hover:text-white transition duration-150 cursor-pointer"
+          className="absolute top-2 right-2 p-1.5 rounded-md border border-slate-800 bg-slate-900 text-slate-400 hover:text-white transition duration-150 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
           title="Copy SQL"
+          aria-label="Copy Recommended SQL Query"
         >
           {copied ? (
             <span className="text-[10px] font-semibold text-emerald-400 px-1">Copied!</span>
@@ -61,7 +65,7 @@ export default function RecommendedQueryCard({ query }) {
 
       {/* Blocked Reason Error Banner if query is blocked */}
       {query.riskLevel === 'BLOCKED' && query.blockedReason && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400 font-medium">
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400 font-medium" role="alert">
           ⚠️ {query.blockedReason}
         </div>
       )}
@@ -80,3 +84,4 @@ export default function RecommendedQueryCard({ query }) {
     </div>
   );
 }
+

@@ -25,12 +25,13 @@ export default function AuthInput({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        className={`w-full rounded-lg border px-3.5 py-2 text-sm bg-slate-950 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/80 transition duration-150 ${
-          error ? 'border-red-500/80 focus:ring-red-500/80' : 'border-slate-800 focus:border-transparent'
+        className={`w-full rounded-lg border px-3.5 py-2 text-sm bg-slate-950 text-slate-100 placeholder-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/80 transition duration-150 disabled:opacity-60 disabled:cursor-not-allowed ${
+          error ? 'border-red-500/80 focus-visible:ring-red-500/80 font-medium' : 'border-slate-800 focus-visible:border-transparent'
         }`}
         {...props}
       />
-      {error && <span className="text-xs text-red-400 mt-0.5">{error}</span>}
+      {error && <span className="text-xs text-red-400 mt-0.5" role="alert">{error}</span>}
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useToast } from '../components/Toast.jsx';
 import AuthInput from '../components/AuthInput.jsx';
 import LoadingButton from '../components/LoadingButton.jsx';
 import FormError from '../components/FormError.jsx';
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,10 +28,13 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await login(email, password);
+      showToast('Welcome back! Login successful.', 'success');
       navigate('/dashboard');
     } catch (err) {
       console.error('Login error details:', err);
-      setError(err.message || 'Invalid email or password.');
+      const msg = err.message || 'Invalid email or password.';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsLoading(false);
     }

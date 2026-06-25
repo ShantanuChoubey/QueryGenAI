@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { useToast } from '../components/Toast.jsx';
 import AuthInput from '../components/AuthInput.jsx';
 import LoadingButton from '../components/LoadingButton.jsx';
 import FormError from '../components/FormError.jsx';
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -40,13 +42,17 @@ export default function RegisterPage() {
     setIsLoading(true);
     try {
       await register(email, password, fullName);
-      setSuccess('Account created successfully! Redirecting to login...');
+      const successMsg = 'Account created successfully! Redirecting to login...';
+      setSuccess(successMsg);
+      showToast('Registration successful! Redirecting to login.', 'success');
       setTimeout(() => {
         navigate('/login');
       }, 1500);
     } catch (err) {
       console.error('Registration error details:', err);
-      setError(err.message || 'Registration failed. Try a different email.');
+      const errorMsg = err.message || 'Registration failed. Try a different email.';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setIsLoading(false);
     }

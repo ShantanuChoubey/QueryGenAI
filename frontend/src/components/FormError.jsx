@@ -2,7 +2,7 @@ export default function FormError({ message }) {
   if (!message) return null;
 
   return (
-    <div className="flex items-center space-x-2.5 rounded-lg border border-red-500/20 bg-red-500/10 p-3.5 text-xs text-red-400">
+    <div className="flex items-center space-x-2.5 rounded-lg border border-red-500/20 bg-red-500/10 p-3.5 text-xs text-red-400" role="alert">
       <svg
         className="h-4.5 w-4.5 shrink-0 text-red-400/80"
         fill="none"

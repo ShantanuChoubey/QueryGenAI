@@ -11,8 +11,9 @@ export default function NaturalLanguageInput({ value, onChange, placeholder, dis
         placeholder={placeholder || 'Find the highest paid employee.'}
         value={value}
         onChange={onChange}
-        className="w-full rounded-xl border border-slate-900 bg-slate-900/40 p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/80 transition duration-150 backdrop-blur-sm"
+        className="w-full rounded-xl border border-slate-900 bg-slate-900/40 p-4 text-slate-100 placeholder-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500/80 transition duration-150 backdrop-blur-sm disabled:opacity-60 disabled:cursor-not-allowed"
       />
     </div>
   );
 }
+
