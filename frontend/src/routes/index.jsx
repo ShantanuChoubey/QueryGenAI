@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout.jsx';
 import AuthLayout from '../layouts/AuthLayout.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
 import RegisterPage from '../pages/RegisterPage.jsx';
+import SQLGeneratorPage from '../pages/SQLGeneratorPage.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
 
 export const router = createBrowserRouter([
@@ -34,14 +35,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/dashboard',
-            element: (
-              <div className="text-center py-12 space-y-2">
-                <h1 className="text-2xl font-bold text-slate-200">Dashboard Workspace</h1>
-                <p className="text-xs text-slate-500 uppercase tracking-widest">
-                  Authentication Scaffolding Only
-                </p>
-              </div>
-            ),
+            element: <SQLGeneratorPage />,
           },
         ],
       },
