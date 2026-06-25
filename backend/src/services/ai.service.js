@@ -3,18 +3,27 @@ import { buildPrompt } from './promptBuilder.js';
 import { callLlama } from './llama.service.js';
 import { validateQueries } from './sqlValidator.service.js';
 import { recommendQuery } from './queryRecommendation.service.js';
+import { checkPromptSafety } from './promptSecurity.service.js';
 
 /**
  * Coordinate generation of SQL query alternatives from natural language.
  */
 export async function generateQueries(userRequest) {
-  // 1. Get database schema definition
+  // 1. Run prompt injection security checks
+  const security = checkPromptSafety(userRequest);
+  if (!security.isSafe) {
+    const error = new Error(security.reason);
+    error.status = 400; // Bad Request
+    throw error;
+  }
+
+  // 2. Get database schema definition
   const schema = getSanitizedSchema();
 
-  // 2. Build the system/user instruction prompt
-  const basePrompt = buildPrompt(userRequest, schema);
+  // 3. Build the system/user instruction prompt using sanitized input query
+  const basePrompt = buildPrompt(security.sanitizedQuery, schema);
 
-  // 3. Inject strict directives requesting 3-5 alternative choices formatted as JSON
+  // 4. Inject strict directives requesting 3-5 alternative choices formatted as JSON
   const enrichedPrompt = `${basePrompt}
 
 CRITICAL FORMATTING INSTRUCTIONS:
@@ -30,16 +39,16 @@ CRITICAL FORMATTING INSTRUCTIONS:
   ]
 }`;
 
-  // 4. Call Llama provider
+  // 5. Call Llama provider
   const result = await callLlama(enrichedPrompt);
 
   if (!result || !Array.isArray(result.queries)) {
     throw new Error('Invalid query format received from AI provider');
   }
 
-  // 5. Pass through local SQL validation check rules
+  // 6. Pass through local SQL validation check rules
   const validated = validateQueries(result.queries);
 
-  // 6. Compute query recommendation scores and return recommended + alternatives
+  // 7. Compute query recommendation scores and return recommended + alternatives
   return recommendQuery(validated);
 }
