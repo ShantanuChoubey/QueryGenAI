@@ -24,7 +24,7 @@ export async function registerUser({ email, password, fullName }) {
       email,
       passwordHash,
       fullName,
-      role: 'VIEWER', // default role
+      role: 'USER', // default role
     },
     select: {
       id: true,
