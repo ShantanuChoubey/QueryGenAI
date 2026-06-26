@@ -6,8 +6,11 @@ import RegisterPage from '../pages/RegisterPage.jsx';
 import SQLGeneratorPage from '../pages/SQLGeneratorPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
 import HistoryPage from '../pages/HistoryPage.jsx';
+import AdminUsersPage from '../pages/AdminUsersPage.jsx';
+import AdminLogsPage from '../pages/AdminLogsPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
+import AdminRoute from '../components/AdminRoute.jsx';
 
 export const router = createBrowserRouter([
   // Redirect root path to dashboard
@@ -47,6 +50,20 @@ export const router = createBrowserRouter([
           {
             path: '/history',
             element: <HistoryPage />,
+          },
+          // Admin routes (require ADMIN role)
+          {
+            element: <AdminRoute />,
+            children: [
+              {
+                path: '/admin/users',
+                element: <AdminUsersPage />,
+              },
+              {
+                path: '/admin/logs',
+                element: <AdminLogsPage />,
+              },
+            ],
           },
         ],
       },

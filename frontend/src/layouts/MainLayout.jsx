@@ -5,6 +5,8 @@ export default function MainLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const isAdmin = user?.role === 'ADMIN';
+
   const initials = user?.fullName
     ? user.fullName
         .split(' ')
@@ -55,10 +57,36 @@ export default function MainLayout() {
             >
               History
             </Link>
+
+            {/* Admin links — only visible to ADMIN role */}
+            {isAdmin && (
+              <>
+                <div className="w-px h-5 bg-slate-700" />
+                <Link
+                  to="/admin/users"
+                  className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-200"
+                >
+                  Users
+                </Link>
+                <Link
+                  to="/admin/logs"
+                  className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-200"
+                >
+                  Audit Logs
+                </Link>
+              </>
+            )}
           </nav>
 
           {/* Right — User menu */}
           <div className="flex items-center space-x-3">
+            {/* Role badge */}
+            {isAdmin && (
+              <span className="hidden md:inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide bg-purple-500/15 text-purple-400 border border-purple-500/20">
+                Admin
+              </span>
+            )}
+
             <Link
               to="/profile"
               className="flex items-center space-x-2 px-2.5 py-1.5 rounded-lg hover:bg-slate-800/60 transition-colors duration-200 group"
