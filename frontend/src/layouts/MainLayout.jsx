@@ -24,7 +24,7 @@ export default function MainLayout() {
 
           <nav className="flex space-x-8">
             <Link
-              to="/"
+              to="/dashboard"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >
               Workspace
