@@ -21,9 +21,8 @@ export default async function setup() {
     // --skip-generate avoids regenerating the client (already built).
     execSync('npx prisma db push --skip-generate', { stdio: 'ignore' });
     console.log('Database schema push successful.');
-  } catch (error) {
-    console.error('Failed to push database schema:', error);
-    // Exit with failure to stop test execution.
-    process.exit(1);
+  } catch {
+    console.warn('⚠️  Database schema push failed — local PostgreSQL may not be running.');
+    console.warn('   Service tests will still run. Integration tests that need a database may fail.');
   }
 }
