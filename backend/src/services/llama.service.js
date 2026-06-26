@@ -28,7 +28,7 @@ export async function callLlama(prompt) {
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+          model: 'meta-llama/llama-3.1-8b-instruct:free',
           messages: [
             {
               role: 'system',
