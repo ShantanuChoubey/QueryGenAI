@@ -8,7 +8,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000, // 10 seconds timeout limit
+  timeout: 60000, // 60 seconds — LLM requests can take up to 45s
 });
 
 // Configure request interceptor to append authorization token if stored locally

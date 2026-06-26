@@ -40,7 +40,7 @@ QueryGenAI/
     ├── eslint.config.js         # ESLint Flat configuration (Node-specific)
     ├── .prettierrc              # Prettier config for backend
     ├── .gitignore               # Backend-specific gitignore
-    ├── .env.example             # Example environment variables (Port, DB, JWT, LLM, etc.)
+    ├── .env.example             # Example environment variables (Port, DB, JWT, Gemini API key, etc.)
     ├── prisma/
     │   └── schema.prisma        # Prisma Schema referencing PostgreSQL database
     └── src/
@@ -143,4 +143,4 @@ Ensure code quality and style standards are met:
    ```bash
    npm run start
    ```
-5. In the **Environment** tab, add your environment variables (`DATABASE_URL`, `JWT_SECRET`, `GEMINI_API_KEY`, `NODE_ENV=production`).
+5. In the **Environment** tab, add your environment variables (`DATABASE_URL`, `JWT_SECRET`, `GEMINI_API_KEY`, `GEMINI_MODEL=gemini-2.5-flash`, `NODE_ENV=production`).
