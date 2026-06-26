@@ -55,6 +55,8 @@ export async function callLlama(prompt) {
       const timeoutId = setTimeout(() => controller.abort(), 45000);
 
       try {
+        console.log("Trying model:", model);
+
         const isFromEnv = envModel && model === envModel;
         console.info(`[OpenRouter Request]
 - Selected Model: ${model}
@@ -116,6 +118,12 @@ export async function callLlama(prompt) {
           } catch (_) {
             // raw text — keep default
           }
+
+          console.error("[OpenRouter]");
+          console.error("Model:", model);
+          console.error("Status:", response.status);
+          console.error("StatusText:", response.statusText);
+          console.error("Body:", errorBody);
 
           const err = new Error(providerMessage);
           err.status = status >= 500 ? 502 : status;
