@@ -4,6 +4,9 @@ import AuthLayout from '../layouts/AuthLayout.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
 import RegisterPage from '../pages/RegisterPage.jsx';
 import SQLGeneratorPage from '../pages/SQLGeneratorPage.jsx';
+import ProfilePage from '../pages/ProfilePage.jsx';
+import HistoryPage from '../pages/HistoryPage.jsx';
+import NotFoundPage from '../pages/NotFoundPage.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
 
 export const router = createBrowserRouter([
@@ -37,14 +40,22 @@ export const router = createBrowserRouter([
             path: '/dashboard',
             element: <SQLGeneratorPage />,
           },
+          {
+            path: '/profile',
+            element: <ProfilePage />,
+          },
+          {
+            path: '/history',
+            element: <HistoryPage />,
+          },
         ],
       },
     ],
   },
-  // Fallback path redirects to dashboard
+  // 404 catch-all
   {
     path: '*',
-    element: <Navigate to="/dashboard" replace />,
+    element: <NotFoundPage />,
   },
 ]);
 export default router;
