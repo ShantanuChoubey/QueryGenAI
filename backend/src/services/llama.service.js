@@ -9,7 +9,7 @@ export async function callLlama(prompt) {
     throw new Error('LLM_API_KEY is not defined in environment variables');
   }
 
-  const endpoint = 'https://api.llama-api.com/chat/completions';
+  const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
   const maxRetries = 2;
   const backoffDelays = [500, 1000];
 
@@ -23,10 +23,12 @@ export async function callLlama(prompt) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': process.env.APP_URL || 'http://localhost',
+          'X-Title': process.env.APP_NAME || 'QueryGenAI',
         },
         signal: controller.signal,
         body: JSON.stringify({
-          model: 'llama3.1-70b',
+          model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
           messages: [
             {
               role: 'system',
