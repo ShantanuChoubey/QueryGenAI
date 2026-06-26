@@ -36,5 +36,5 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET,
   LLM_API_KEY: process.env.LLM_API_KEY,
   // Optional: override the AI model. Falls back to free model chain if not set.
-  LLM_MODEL: process.env.LLM_MODEL || null,
+  LLM_MODEL: process.env.LLM_MODEL || process.env.LLM_MODEL_NAME || null,
 };

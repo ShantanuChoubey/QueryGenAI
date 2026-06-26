@@ -1,13 +1,9 @@
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Model priority list — tried in order. First that works wins.
-// All use the :free tier. Add LLM_MODEL env var to override entirely.
+// Uses openrouter/free generic router. Add LLM_MODEL or LLM_MODEL_NAME to override entirely.
 const FREE_MODEL_FALLBACKS = [
   'openrouter/free',
-  'google/gemma-2-9b-it:free',
-  'qwen/qwen3-8b:free',
-  'meta-llama/llama-3.2-3b-instruct:free',
-  'mistralai/mistral-7b-instruct:free',
 ];
 
 /**
@@ -42,8 +38,8 @@ export async function callLlama(prompt) {
     throw new Error('LLM_API_KEY is not defined in environment variables');
   }
 
-  // Allow full override from environment, otherwise use fallback list
-  const envModel = process.env.LLM_MODEL?.trim();
+  // Allow full override from environment (supporting both LLM_MODEL and LLM_MODEL_NAME), otherwise use fallback list
+  const envModel = (process.env.LLM_MODEL || process.env.LLM_MODEL_NAME)?.trim();
   const modelsToTry = envModel ? [envModel, ...FREE_MODEL_FALLBACKS] : FREE_MODEL_FALLBACKS;
 
   const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
@@ -59,6 +55,12 @@ export async function callLlama(prompt) {
       const timeoutId = setTimeout(() => controller.abort(), 45000);
 
       try {
+        const isFromEnv = envModel && model === envModel;
+        console.info(`[OpenRouter Request]
+- Selected Model: ${model}
+- Endpoint: ${endpoint}
+- Origin: ${isFromEnv ? 'environment variable (LLM_MODEL/LLM_MODEL_NAME)' : 'fallback list'}`);
+
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
