@@ -8,6 +8,8 @@ import { requestLogger } from './middleware/requestLogger.js';
 
 const app = express();
 
+import { errorResponse } from './utils/apiResponse.js';
+
 // Apply request ID and logger middlewares globally
 app.use(requestIdMiddleware);
 app.use(requestLogger);
@@ -42,19 +44,16 @@ app.use('/api/v1', apiRouter);
 
 // Base route fallback
 app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Not Found',
-    message: 'The requested resource could not be found.',
-  });
+  return errorResponse(res, 404, 'The requested resource could not be found.', 'NotFound');
 });
 
 // Global error handler middleware
 app.use((err, req, res, _next) => {
   console.error('Unhandled Server Error:', err);
-  res.status(err.status || 500).json({
-    error: 'Internal Server Error',
-    message: err.message || 'An unexpected error occurred.',
-  });
+  const status = err.status || 500;
+  const message = err.message || 'An unexpected error occurred.';
+  const error = err.name || 'InternalServerError';
+  return errorResponse(res, status, message, error);
 });
 
 export default app;

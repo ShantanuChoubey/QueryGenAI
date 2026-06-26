@@ -30,7 +30,10 @@ function createRateLimiter({ windowMs, max, message }) {
 
       // Return consistent HTTP 429 Too Many Requests response
       return res.status(429).json({
+        success: false,
+        requestId: req.requestId || null,
         message,
+        error: 'TooManyRequests',
         retryAfter: `${retryAfterSeconds}s`,
       });
     }

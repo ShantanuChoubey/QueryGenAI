@@ -1,5 +1,6 @@
 import { verifyToken } from '../utils/jwt.js';
 import prisma from '../config/db.js';
+import { errorResponse } from '../utils/apiResponse.js';
 
 /**
  * Protect middleware enforcing JWT authentication.
@@ -13,10 +14,7 @@ export const protect = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Access denied. No authorization token was provided.',
-    });
+    return errorResponse(res, 401, 'Access denied. No authorization token was provided.', 'Unauthorized');
   }
 
   try {
@@ -38,10 +36,7 @@ export const protect = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'The user belonging to this token no longer exists.',
-      });
+      return errorResponse(res, 401, 'The user belonging to this token no longer exists.', 'Unauthorized');
     }
 
     // 3. Attach user context to request
@@ -51,15 +46,10 @@ export const protect = async (req, res, next) => {
     console.error('JWT Verification Error:', error);
 
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        error: 'Unauthorized',
-        message: 'Your token has expired. Please log in again.',
-      });
+      return errorResponse(res, 401, 'Your token has expired. Please log in again.', 'Unauthorized');
     }
 
-    return res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Invalid access token.',
-    });
+    return errorResponse(res, 401, 'Invalid access token.', 'Unauthorized');
   }
 };
+

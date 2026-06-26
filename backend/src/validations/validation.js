@@ -1,3 +1,5 @@
+import { errorResponse } from '../utils/apiResponse.js';
+
 /**
  * Helper middleware that parses and validates request inputs against a Zod schema.
  */
@@ -17,9 +19,8 @@ export const validate = (schema) => (req, res, next) => {
       };
     });
 
-    return res.status(400).json({
+    return errorResponse(res, 400, 'Request validation failed', {
       error: 'ValidationError',
-      message: 'Request validation failed',
       details: errorDetails,
     });
   }
