@@ -97,7 +97,7 @@ export async function callLlama(prompt) {
           // Model is unavailable / deprecated / rejected — skip to next model
           const isModelUnavailable = status >= 400 && status < 500 && status !== 401 && status !== 429;
           if (isModelUnavailable) {
-            console.warn(`[LLM] Model "${model}" returned status ${status}. Trying next fallback...`);
+            console.warn(`[LLM Fallback Attempt] Model "${model}" failed with status ${status}. Response: ${errorBody.substring(0, 300)}. Transitioning to next model in fallback list...`);
             break; // break inner retry loop → next model
           }
 
