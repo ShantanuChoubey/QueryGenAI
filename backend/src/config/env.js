@@ -1,11 +1,15 @@
 import path from 'path';
 import dotenv from 'dotenv';
 
-// Load test env first – Vitest does not always set NODE_ENV='test'.
-const testEnvPath = path.resolve(process.cwd(), '.env.test');
-dotenv.config({ path: testEnvPath, override: true });
+// In test environments, load .env.test first (it overrides any existing vars).
+// In production (e.g. Render), environment variables are injected directly —
+// we must NOT load .env.test or it will overwrite real production credentials.
+if (process.env.NODE_ENV === 'test') {
+  const testEnvPath = path.resolve(process.cwd(), '.env.test');
+  dotenv.config({ path: testEnvPath, override: true });
+}
 
-// Load default env (production) – will not overwrite already‑set variables.
+// Load .env as a fallback (ignored when vars are already set by the OS/platform).
 const defaultEnvPath = path.resolve(process.cwd(), '.env');
 dotenv.config({ path: defaultEnvPath, override: false });
 
