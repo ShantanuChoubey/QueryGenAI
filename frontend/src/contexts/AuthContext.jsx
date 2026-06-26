@@ -18,8 +18,8 @@ export function AuthProvider({ children }) {
           apiClient.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
           const response = await apiClient.get('/auth/me');
           
-          if (response.data?.success && response.data?.user) {
-            setUser(response.data.user);
+          if (response.data?.success && response.data?.data?.user) {
+            setUser(response.data.data.user);
             setToken(savedToken);
           } else {
             localStorage.removeItem('token');
@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
       password,
     });
 
-    const { token: receivedToken, user: receivedUser } = response.data;
+    const { token: receivedToken, user: receivedUser } = response.data.data;
     
     localStorage.setItem('token', receivedToken);
     apiClient.defaults.headers.common['Authorization'] = `Bearer ${receivedToken}`;
