@@ -36,7 +36,7 @@ export function validateQueries(queries) {
     { regex: /\bCREATE\b/i, name: 'CREATE' },
     { regex: /\bGRANT\b/i, name: 'GRANT' },
     { regex: /\bREVOKE\b/i, name: 'REVOKE' },
-    { regex: /\bEXEC\b/i, name: 'EXEC' },
+    { regex: /\bEXEC(UTE)?\b/i, name: 'EXEC' },
     { regex: /\bCALL\b/i, name: 'CALL' },
   ];
 
