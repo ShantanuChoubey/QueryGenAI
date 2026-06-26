@@ -50,11 +50,17 @@ export default function SQLGeneratorPage() {
       }
     } catch (err) {
       console.error('SQL generation failed:', err);
-      const msg = err.response?.data?.message || err.message || 'An error occurred during query generation.';
-      const details = err.response?.data?.error || '';
-      const reqId = err.response?.data?.requestId || err.response?.headers?.['x-request-id'] || '';
+      // axios interceptor remaps errors to { message, status, data }
+      // err.response is undefined — read from err directly
+      const msg = err.message || 'An error occurred during query generation.';
+      const details = err.data?.error
+        ? typeof err.data.error === 'object'
+          ? JSON.stringify(err.data.error, null, 2)
+          : String(err.data.error)
+        : '';
+      const reqId = err.data?.requestId || '';
       setErrorMsg(msg);
-      setErrorDetails(typeof details === 'object' ? JSON.stringify(details, null, 2) : details);
+      setErrorDetails(details);
       setRequestId(reqId);
       showToast(msg, 'error');
     } finally {
