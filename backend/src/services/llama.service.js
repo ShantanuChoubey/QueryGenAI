@@ -3,6 +3,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Model priority list — tried in order. First that works wins.
 // All use the :free tier. Add LLM_MODEL env var to override entirely.
 const FREE_MODEL_FALLBACKS = [
+  'openrouter/free',
   'google/gemma-2-9b-it:free',
   'qwen/qwen3-8b:free',
   'meta-llama/llama-3.2-3b-instruct:free',
@@ -47,7 +48,6 @@ export async function callLlama(prompt) {
 
   const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
   const TRANSIENT_STATUSES = [429, 502, 503, 504];
-  const MODEL_UNAVAILABLE_STATUSES = [400, 404];
 
   for (let modelIndex = 0; modelIndex < modelsToTry.length; modelIndex++) {
     const model = modelsToTry[modelIndex];
@@ -92,9 +92,10 @@ export async function callLlama(prompt) {
           const status = response.status;
           const errorBody = await response.text();
 
-          // Model is unavailable / deprecated — skip to next model
-          if (MODEL_UNAVAILABLE_STATUSES.includes(status)) {
-            console.warn(`[LLM] Model "${model}" returned ${status}. Trying next fallback...`);
+          // Model is unavailable / deprecated / rejected — skip to next model
+          const isModelUnavailable = status >= 400 && status < 500 && status !== 401 && status !== 429;
+          if (isModelUnavailable) {
+            console.warn(`[LLM] Model "${model}" returned status ${status}. Trying next fallback...`);
             break; // break inner retry loop → next model
           }
 
