@@ -143,4 +143,4 @@ Ensure code quality and style standards are met:
    ```bash
    npm run start
    ```
-5. In the **Environment** tab, add your environment variables (`DATABASE_URL`, `JWT_SECRET`, `LLM_API_KEY`, `NODE_ENV=production`).
+5. In the **Environment** tab, add your environment variables (`DATABASE_URL`, `JWT_SECRET`, `GEMINI_API_KEY`, `NODE_ENV=production`).

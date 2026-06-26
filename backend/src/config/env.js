@@ -19,7 +19,7 @@ const REQUIRED_ENV_VARS = [
   'NODE_ENV',
   'DATABASE_URL',
   'JWT_SECRET',
-  'LLM_API_KEY',
+  'GEMINI_API_KEY',
 ];
 
 const missing = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
@@ -34,7 +34,7 @@ export const env = {
   NODE_ENV: process.env.NODE_ENV,
   DATABASE_URL: process.env.DATABASE_URL,
   JWT_SECRET: process.env.JWT_SECRET,
-  LLM_API_KEY: process.env.LLM_API_KEY,
-  // Optional: override the AI model. Falls back to free model chain if not set.
-  LLM_MODEL: process.env.LLM_MODEL || process.env.LLM_MODEL_NAME || null,
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  // Optional: override the AI model. Falls back to gemini-2.5-flash if not set.
+  GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
 };

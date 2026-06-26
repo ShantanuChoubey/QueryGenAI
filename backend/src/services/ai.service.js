@@ -1,6 +1,6 @@
 import { getSanitizedSchema } from './schema.js';
 import { buildPrompt } from './promptBuilder.js';
-import { callLlama } from './llama.service.js';
+import { callGemini } from './gemini.service.js';
 import { validateQueries } from './sqlValidator.service.js';
 import { recommendQuery } from './queryRecommendation.service.js';
 import { checkPromptSafety } from './promptSecurity.service.js';
@@ -39,8 +39,8 @@ CRITICAL FORMATTING INSTRUCTIONS:
   ]
 }`;
 
-  // 5. Call Llama provider
-  const result = await callLlama(enrichedPrompt);
+  // 5. Call Gemini provider
+  const result = await callGemini(enrichedPrompt);
 
   if (!result || !Array.isArray(result.queries)) {
     throw new Error('Invalid query format received from AI provider');

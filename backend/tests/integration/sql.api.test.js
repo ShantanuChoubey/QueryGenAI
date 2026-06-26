@@ -2,11 +2,11 @@ import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../src/app.js';
 import prisma from '../../src/config/db.js';
-import { callLlama } from '../../src/services/llama.service.js';
+import { callGemini } from '../../src/services/gemini.service.js';
 
-// Mock only the external Llama API
-vi.mock('../../src/services/llama.service.js', () => ({
-  callLlama: vi.fn(),
+// Mock only the external Gemini API
+vi.mock('../../src/services/gemini.service.js', () => ({
+  callGemini: vi.fn(),
 }));
 
 describe('SQL API Integration Tests', () => {
@@ -22,8 +22,8 @@ describe('SQL API Integration Tests', () => {
 
   describe('POST /api/v1/sql/generate', () => {
     test('should successfully generate SQL alternatives on valid request with standard output shape', async () => {
-      // Mock Llama response
-      callLlama.mockResolvedValueOnce({
+      // Mock Gemini response
+      callGemini.mockResolvedValueOnce({
         queries: [
           {
             sql: 'SELECT * FROM users;',
@@ -117,7 +117,7 @@ describe('SQL API Integration Tests', () => {
       
       // AI Rate limit threshold is 10 requests per 15 minutes.
       // We make 10 requests which should bypass the limiter, and the 11th should be blocked.
-      callLlama.mockResolvedValue({
+      callGemini.mockResolvedValue({
         queries: [{ sql: 'SELECT 1;', explanation: 'Test', ranking: 1 }]
       });
 

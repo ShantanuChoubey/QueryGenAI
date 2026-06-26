@@ -58,7 +58,8 @@ Configure the following keys in the Render environment settings dashboard:
 | `PORT` | `10000` | Port allocated by Render dynamically. |
 | `DATABASE_URL`| `postgresql://...` | Connection string for the PostgreSQL database. |
 | `JWT_SECRET` | `[secure_random_string]` | Keys used for signing/authenticating user tokens. |
-| `LLM_API_KEY` | `[secure_llm_api_key]` | Access keys for the AI integration endpoints. |
+| `GEMINI_API_KEY` | `[secure_gemini_api_key]` | Access keys for the Google Gemini API. |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | (Optional) Model name to use (defaults to gemini-2.5-flash). |
 
 ---
 
