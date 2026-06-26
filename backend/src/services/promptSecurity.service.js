@@ -16,7 +16,11 @@ export function checkPromptSafety(query) {
   // Rules mapping common injection attack patterns
   const injectionPatterns = [
     {
-      regex: /ignore\s+(?:previous\s+)?instructions/i,
+      regex: /ignore\s+(?:all\s+above|previous\s+)?instructions/i,
+      reason: 'Malicious intent: Attempt to bypass instructions.',
+    },
+    {
+      regex: /ignore\s+all\s+above/i,
       reason: 'Malicious intent: Attempt to bypass instructions.',
     },
     {
@@ -40,25 +44,37 @@ export function checkPromptSafety(query) {
       reason: 'Malicious intent: System prompt extraction.',
     },
     {
-      regex: /(?:execute|run|exec)\s+(?:shell|terminal|system)\s+command/i,
-      reason: 'Malicious intent: Shell execution command injection.',
+      regex: /override\s+(?:your\s+|all\s+)?(?:instructions|rules)/i,
+      reason: 'Malicious intent: Attempt to override instructions.',
     },
     {
-      regex: /(?:return|reveal|show|display)\s+(?:api\s+key|secrets|credentials)/i,
-      reason: 'Malicious intent: Sensitive key extraction.',
-    },
-    {
-      regex: /bypass\s+validation/i,
-      reason: 'Malicious intent: Validation bypass attempt.',
-    },
-    {
-      regex: /(?:pretend\s+to\s+be|act\s+as)\s+system/i,
+      regex: /(?:pretend\s+(?:you\s+are\s+the|to\s+be)|act\s+as)\s+system/i,
       reason: 'Malicious intent: Impersonation attempt.',
     },
     {
-      regex: /override\s+(?:instructions|rules)/i,
-      reason: 'Malicious intent: Attempt to override instructions.',
+      regex: /(?:hidden|internal)\s+(?:prompt|rules|instructions)/i,
+      reason: 'Malicious intent: System prompt extraction.',
     },
+    {
+      regex: /print\s+(?:your\s+)?instructions/i,
+      reason: 'Malicious intent: System prompt extraction.',
+    },
+    {
+      regex: /\b(?:api\s+key|jwt\s+secret|database\s+password|environment\s+variables|access\s+token|bearer\s+token|env\s+file|dotenv|environment\s+configuration)\b|\.env\b/i,
+      reason: 'Malicious intent: Sensitive key extraction.',
+    },
+    {
+      regex: /(?:disable|bypass|skip|ignore)\s+(?:validation|security|filters|authorization|safety|restrictions)/i,
+      reason: 'Malicious intent: Validation bypass attempt.',
+    },
+    {
+      regex: /\b(?:bash|sh|powershell|cmd\.exe|terminal|shell|sudo|curl|wget)\b/i,
+      reason: 'Malicious intent: Shell execution command injection.',
+    },
+    {
+      regex: /rm\s+-rf/i,
+      reason: 'Malicious intent: Shell execution command injection.',
+    }
   ];
 
   for (const pattern of injectionPatterns) {
