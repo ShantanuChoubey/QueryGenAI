@@ -70,6 +70,12 @@ export default function MainLayout() {
               History
             </Link>
             <Link
+              to="/saved-queries"
+              className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
+            >
+              Saved Queries
+            </Link>
+            <Link
               to="/profile"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >

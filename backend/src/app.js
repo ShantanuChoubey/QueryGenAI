@@ -8,6 +8,7 @@ import workspaceRouter from './routes/workspace.js';
 import tableRouter from './routes/table.js';
 import columnRouter from './routes/column.js';
 import relationshipRouter from './routes/relationship.js';
+import savedQueryRouter from './routes/savedQuery.js';
 import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { requestLogger } from './middleware/requestLogger.js';
@@ -58,6 +59,9 @@ apiRouter.use('/relationships', relationshipRouter);
 
 // Register admin routes (ADMIN role required)
 apiRouter.use('/admin', adminRouter);
+
+// Register saved queries routes
+apiRouter.use('/saved-queries', savedQueryRouter);
 
 // Mount routes under /api/v1
 app.use('/api/v1', apiRouter);

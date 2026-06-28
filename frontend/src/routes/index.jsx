@@ -9,6 +9,7 @@ import HistoryPage from '../pages/HistoryPage.jsx';
 import WorkspacePage from '../pages/WorkspacePage.jsx';
 import WorkspaceDetailPage from '../pages/WorkspaceDetailPage.jsx';
 import SchemaBuilderPage from '../pages/SchemaBuilderPage.jsx';
+import SavedQueriesPage from '../pages/SavedQueriesPage.jsx';
 import AdminUsersPage from '../pages/AdminUsersPage.jsx';
 import AdminLogsPage from '../pages/AdminLogsPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
@@ -45,6 +46,15 @@ export const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <SQLGeneratorPage />,
+          },
+          {
+            // /sql is a shorter alias to the SQL Generator
+            path: '/sql',
+            element: <SQLGeneratorPage />,
+          },
+          {
+            path: '/saved-queries',
+            element: <SavedQueriesPage />,
           },
           {
             path: '/workspaces',

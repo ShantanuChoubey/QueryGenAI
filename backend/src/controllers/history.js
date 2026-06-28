@@ -4,17 +4,27 @@ import { successResponse } from '../utils/apiResponse.js';
 /**
  * GET /api/v1/history
  * Returns the authenticated user's query history with variants,
- * ordered by most recent first. Supports pagination.
+ * ordered by most recent first. Supports pagination, search, status
+ * filter, workspace filter, and sort order.
  */
 export const getHistory = async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
     const skip = (page - 1) * limit;
+    const { search, status, workspaceId, sort } = req.query;
+    const orderDir = sort === 'asc' ? 'asc' : 'desc';
+
+    const where = {
+      userId: req.user.id,
+      ...(status ? { executionStatus: status } : {}),
+      ...(workspaceId ? { workspaceId } : {}),
+      ...(search ? { prompt: { contains: search, mode: 'insensitive' } } : {}),
+    };
 
     const [queries, total] = await Promise.all([
       prisma.query.findMany({
-        where: { userId: req.user.id },
+        where,
         select: {
           id: true,
           prompt: true,
@@ -22,36 +32,28 @@ export const getHistory = async (req, res, next) => {
           executionStatus: true,
           executionTime: true,
           createdAt: true,
+          workspace: { select: { id: true, name: true } },
           variants: {
-            select: {
-              id: true,
-              sql: true,
-              explanation: true,
-              ranking: true,
-            },
+            select: { id: true, sql: true, explanation: true, ranking: true },
             orderBy: { ranking: 'asc' },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: orderDir },
         skip,
         take: limit,
       }),
-      prisma.query.count({ where: { userId: req.user.id } }),
+      prisma.query.count({ where }),
     ]);
 
     return successResponse(res, 200, 'Query history retrieved successfully', {
       queries,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 /**
  * DELETE /api/v1/history/:id
