@@ -46,6 +46,11 @@ export async function listWorkspaceTables(workspaceId, userId) {
 
   const tables = await prisma.table.findMany({
     where: { workspaceId },
+    include: {
+      columns: {
+        orderBy: { name: 'asc' },
+      },
+    },
     orderBy: { name: 'asc' },
   });
 

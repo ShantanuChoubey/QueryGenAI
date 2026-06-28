@@ -24,6 +24,12 @@ vi.mock('../../src/config/db.js', () => ({
         updatedAt: new Date(),
       }),
     },
+    workspace: {
+      findUnique: vi.fn(),
+    },
+    table: { count: vi.fn().mockResolvedValue(0) },
+    column: { count: vi.fn().mockResolvedValue(0) },
+    relationship: { count: vi.fn().mockResolvedValue(0) },
     auditLog: {
       create: vi.fn().mockResolvedValue({}),
     },
@@ -135,6 +141,103 @@ describe('SQL API Integration Tests', () => {
       expect(res.body.success).toBe(false);
       expect(res.body).toHaveProperty('requestId');
       expect(res.body).toHaveProperty('error');
+    });
+  });
+
+  describe('Workspace Schema Context Integration', () => {
+    const WORKSPACE_ID = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
+
+    const workspaceWithTables = {
+      id: WORKSPACE_ID,
+      name: 'HR System',
+      databaseType: 'POSTGRESQL',
+      userId: 'test-user-id',
+      tables: [
+        {
+          id: 'tbl-1',
+          name: 'employees',
+          description: null,
+          workspaceId: WORKSPACE_ID,
+          columns: [
+            { id: 'col-1', tableId: 'tbl-1', name: 'id', dataType: 'UUID', nullable: false, primaryKey: true, unique: true, defaultValue: null },
+            { id: 'col-2', tableId: 'tbl-1', name: 'name', dataType: 'TEXT', nullable: false, primaryKey: false, unique: false, defaultValue: null },
+          ],
+        },
+      ],
+      relationships: [],
+    };
+
+    test('generates SQL using workspace schema context when workspaceId is valid', async () => {
+      prisma.workspace.findUnique.mockResolvedValueOnce(workspaceWithTables);
+      callGemini.mockResolvedValueOnce({
+        queries: [
+          { sql: 'SELECT * FROM employees;', explanation: 'All employees', ranking: 1 },
+          { sql: 'SELECT id, name FROM employees;', explanation: 'Employee IDs and names', ranking: 2 },
+        ],
+      });
+
+      const res = await request(app)
+        .post('/api/v1/sql/generate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ query: 'List all employees.', workspaceId: WORKSPACE_ID });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.recommendedQuery).toBeDefined();
+    });
+
+    test('returns 404 when workspace does not exist', async () => {
+      prisma.workspace.findUnique.mockResolvedValueOnce(null);
+
+      const res = await request(app)
+        .post('/api/v1/sql/generate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ query: 'Show all rows.', workspaceId: WORKSPACE_ID });
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
+
+    test('returns 403 when workspace belongs to another user', async () => {
+      prisma.workspace.findUnique.mockResolvedValueOnce({
+        ...workspaceWithTables,
+        userId: 'other-user-id', // different owner
+      });
+
+      const res = await request(app)
+        .post('/api/v1/sql/generate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ query: 'Show all rows.', workspaceId: WORKSPACE_ID });
+
+      expect(res.status).toBe(403);
+      expect(res.body.success).toBe(false);
+    });
+
+    test('returns 400 when workspaceId is not a valid UUID', async () => {
+      const res = await request(app)
+        .post('/api/v1/sql/generate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ query: 'Show all rows.', workspaceId: 'not-a-uuid' });
+
+      expect(res.status).toBe(400);
+      expect(res.body.success).toBe(false);
+    });
+
+    test('generates SQL without workspaceId (backward-compatible fallback)', async () => {
+      callGemini.mockResolvedValueOnce({
+        queries: [
+          { sql: 'SELECT * FROM users;', explanation: 'All users', ranking: 1 },
+          { sql: 'SELECT id FROM users;', explanation: 'User IDs', ranking: 2 },
+        ],
+      });
+
+      const res = await request(app)
+        .post('/api/v1/sql/generate')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ query: 'Get all users.' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
     });
   });
 

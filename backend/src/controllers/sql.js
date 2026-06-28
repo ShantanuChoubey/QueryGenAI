@@ -1,27 +1,37 @@
 import { generateQueries } from '../services/ai.service.js';
+import { getWorkspace } from '../services/workspace.service.js';
 import { successResponse } from '../utils/apiResponse.js';
 import prisma from '../config/db.js';
 
 /**
  * Handle requests to generate SQL alternatives from a user prompt.
+ * When workspaceId is supplied, validates ownership and uses the
+ * workspace schema as context for the Gemini prompt.
  * Persists the query and all variants to the database for history.
  */
 export const generateSqlPrompt = async (req, res, next) => {
   try {
     const { query, workspaceId } = req.body;
+    const userId = req.user?.id;
+
+    // If a workspace is supplied, validate it exists and belongs to the user
+    if (workspaceId) {
+      await getWorkspace(workspaceId, userId); // throws 404 / 403 automatically
+    }
+
     const startTime = Date.now();
 
-    // Call the unified AI service which handles prompt construction and LLM invocation
-    const queries = await generateQueries(query);
+    // Call the unified AI service which handles prompt construction and Gemini invocation
+    const queries = await generateQueries(query, workspaceId || null);
 
     const executionTime = Date.now() - startTime;
 
     // Persist Query + QueryVariants to the database for history tracking
-    if (req.user?.id) {
+    if (userId) {
       const recommendedSQL = queries?.recommendedQuery?.sql || null;
       const allVariants = Array.isArray(queries?.alternatives) ? queries.alternatives : [];
 
-      // Save the query record and all variants in a single transaction
+      // Save the query record and all variants
       prisma.query
         .create({
           data: {
@@ -29,7 +39,7 @@ export const generateSqlPrompt = async (req, res, next) => {
             selectedSQL: recommendedSQL,
             executionStatus: 'SUCCESS',
             executionTime,
-            userId: req.user.id,
+            userId,
             workspaceId: workspaceId || null,
             variants: {
               create: allVariants.map((v) => ({
@@ -47,7 +57,7 @@ export const generateSqlPrompt = async (req, res, next) => {
         .create({
           data: {
             action: 'SQL_GENERATE',
-            userId: req.user.id,
+            userId,
             ipAddress:
               req.ip ||
               req.headers['x-forwarded-for'] ||
