@@ -29,6 +29,14 @@ enum DatabaseType {
   OTHER
 }
 
+/// Supported Relationship Types.
+enum RelationshipType {
+  ONE_TO_ONE
+  ONE_TO_MANY
+  MANY_TO_ONE
+  MANY_TO_MANY
+}
+
 /// The User table handles system profiles and verification parameters.
 model User {
   id           String      @id @default(uuid()) @db.Uuid
@@ -48,18 +56,81 @@ model User {
 
 /// Workspace is the top-level container for a user's database project.
 model Workspace {
-  id           String       @id @default(uuid()) @db.Uuid
-  name         String
-  description  String?      @db.Text
-  databaseType DatabaseType @default(POSTGRESQL)
-  userId       String       @db.Uuid
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  queries      Query[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id            String         @id @default(uuid()) @db.Uuid
+  name          String
+  description   String?        @db.Text
+  databaseType  DatabaseType   @default(POSTGRESQL)
+  userId        String         @db.Uuid
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  queries       Query[]
+  tables        Table[]
+  relationships Relationship[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([userId])
   @@map("workspaces")
+}
+
+/// Table represents a logical database table within a workspace schema.
+model Table {
+  id                String         @id @default(uuid()) @db.Uuid
+  workspaceId       String         @db.Uuid
+  workspace         Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name              String
+  description       String?        @db.Text
+  columns           Column[]
+  sourceRelationships Relationship[] @relation("SourceTable")
+  targetRelationships Relationship[] @relation("TargetTable")
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@unique([workspaceId, name])
+  @@index([workspaceId])
+  @@map("tables")
+}
+
+/// Column represents a single field in a Table.
+model Column {
+  id                 String         @id @default(uuid()) @db.Uuid
+  tableId            String         @db.Uuid
+  table              Table          @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  name               String
+  dataType           String
+  nullable           Boolean        @default(true)
+  primaryKey         Boolean        @default(false)
+  unique             Boolean        @default(false)
+  defaultValue       String?
+  sourceRelationships Relationship[] @relation("SourceColumn")
+  targetRelationships Relationship[] @relation("TargetColumn")
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@unique([tableId, name])
+  @@index([tableId])
+  @@map("columns")
+}
+
+/// Relationship declares a foreign-key link between two tables in a workspace.
+model Relationship {
+  id               String           @id @default(uuid()) @db.Uuid
+  workspaceId      String           @db.Uuid
+  workspace        Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceTableId    String           @db.Uuid
+  sourceTable      Table            @relation("SourceTable", fields: [sourceTableId], references: [id], onDelete: Cascade)
+  sourceColumnId   String           @db.Uuid
+  sourceColumn     Column           @relation("SourceColumn", fields: [sourceColumnId], references: [id], onDelete: Cascade)
+  targetTableId    String           @db.Uuid
+  targetTable      Table            @relation("TargetTable", fields: [targetTableId], references: [id], onDelete: Cascade)
+  targetColumnId   String           @db.Uuid
+  targetColumn     Column           @relation("TargetColumn", fields: [targetColumnId], references: [id], onDelete: Cascade)
+  relationshipType RelationshipType @default(ONE_TO_MANY)
+  createdAt        DateTime         @default(now())
+
+  @@index([workspaceId])
+  @@index([sourceTableId])
+  @@index([targetTableId])
+  @@map("relationships")
 }
 
 /// The Query table logs the user prompt, execution times, and chosen SQL.
