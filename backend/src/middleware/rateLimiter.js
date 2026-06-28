@@ -5,7 +5,7 @@ const store = {};
  */
 function createRateLimiter({ windowMs, max, message }) {
   return (req, res, next) => {
-    const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ip = req.headers['x-forwarded-for'] || req.ip || req.connection.remoteAddress;
     const now = Date.now();
     const routeKey = req.baseUrl + req.path;
 

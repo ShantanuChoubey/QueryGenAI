@@ -8,7 +8,7 @@ import prisma from '../config/db.js';
  */
 export const generateSqlPrompt = async (req, res, next) => {
   try {
-    const { query } = req.body;
+    const { query, workspaceId } = req.body;
     const startTime = Date.now();
 
     // Call the unified AI service which handles prompt construction and LLM invocation
@@ -30,6 +30,7 @@ export const generateSqlPrompt = async (req, res, next) => {
             executionStatus: 'SUCCESS',
             executionTime,
             userId: req.user.id,
+            workspaceId: workspaceId || null,
             variants: {
               create: allVariants.map((v) => ({
                 sql: v.sql,

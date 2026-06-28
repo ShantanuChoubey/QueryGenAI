@@ -4,6 +4,7 @@ import authRouter from './routes/auth.js';
 import sqlRouter from './routes/sql.js';
 import adminRouter from './routes/admin.js';
 import historyRouter from './routes/history.js';
+import workspaceRouter from './routes/workspace.js';
 import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { requestLogger } from './middleware/requestLogger.js';
@@ -43,6 +44,9 @@ apiRouter.use('/sql', aiLimiter, sqlRouter);
 
 // Register history routes (authenticated users)
 apiRouter.use('/history', historyRouter);
+
+// Register workspace routes (authenticated users)
+apiRouter.use('/workspaces', workspaceRouter);
 
 // Register admin routes (ADMIN role required)
 apiRouter.use('/admin', adminRouter);

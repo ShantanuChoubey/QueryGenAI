@@ -6,5 +6,9 @@ export const generateSqlSchema = z.object({
       .string({ required_error: 'Query is required' })
       .min(1, { message: 'Query cannot be empty' })
       .trim(),
+    workspaceId: z
+      .string()
+      .uuid({ message: 'Workspace ID must be a valid UUID' })
+      .optional(),
   }),
 });

@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
+import { WorkspaceProvider } from './contexts/WorkspaceContext.jsx';
 import { ToastProvider } from './components/Toast.jsx';
 import { router } from './routes/index.jsx';
 
@@ -8,9 +9,11 @@ export default function App() {
   return (
     <AppProvider>
       <AuthProvider>
-        <ToastProvider>
-          <RouterProvider router={router} />
-        </ToastProvider>
+        <WorkspaceProvider>
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
+        </WorkspaceProvider>
       </AuthProvider>
     </AppProvider>
   );

@@ -27,6 +27,9 @@ vi.mock('../../src/config/db.js', () => ({
     auditLog: {
       create: vi.fn().mockResolvedValue({}),
     },
+    query: {
+      create: vi.fn().mockResolvedValue({}),
+    },
     $disconnect: vi.fn().mockResolvedValue(undefined),
   },
 }));

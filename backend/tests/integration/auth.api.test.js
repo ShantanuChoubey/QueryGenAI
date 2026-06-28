@@ -1,7 +1,12 @@
-import { describe, test, expect, beforeAll, afterAll } from 'vitest';
+import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import app from '../../src/app.js';
 import prisma from '../../src/config/db.js';
+
+// Mock external Gemini service to prevent resolving and loading @google/generative-ai
+vi.mock('../../src/services/gemini.service.js', () => ({
+  callGemini: vi.fn(),
+}));
 
 describe('Auth API Integration Tests', () => {
   const testEmail = `integration-${Date.now()}@example.com`;

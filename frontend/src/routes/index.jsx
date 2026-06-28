@@ -6,6 +6,7 @@ import RegisterPage from '../pages/RegisterPage.jsx';
 import SQLGeneratorPage from '../pages/SQLGeneratorPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
 import HistoryPage from '../pages/HistoryPage.jsx';
+import WorkspacePage from '../pages/WorkspacePage.jsx';
 import AdminUsersPage from '../pages/AdminUsersPage.jsx';
 import AdminLogsPage from '../pages/AdminLogsPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
@@ -13,10 +14,10 @@ import ProtectedRoute from '../components/ProtectedRoute.jsx';
 import AdminRoute from '../components/AdminRoute.jsx';
 
 export const router = createBrowserRouter([
-  // Redirect root path to dashboard
+  // Redirect root path to workspaces landing page
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/workspaces" replace />,
   },
   // Public authentication routes (wrapped by AuthLayout)
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <SQLGeneratorPage />,
+          },
+          {
+            path: '/workspaces',
+            element: <WorkspacePage />,
           },
           {
             path: '/profile',

@@ -46,6 +46,12 @@ export default function MainLayout() {
           {/* Center — Navigation */}
           <nav className="hidden sm:flex items-center space-x-6">
             <Link
+              to="/workspaces"
+              className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
+            >
+              Workspaces
+            </Link>
+            <Link
               to="/dashboard"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >
