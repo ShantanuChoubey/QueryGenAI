@@ -78,6 +78,28 @@ export default function SQLGeneratorPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Workspace Inner Navigation Bar */}
+      {currentWorkspace && (
+        <div className="flex border-b border-slate-800 pb-px gap-6">
+          <Link
+            to={`/workspaces/${currentWorkspace.id}`}
+            className="text-sm font-medium text-slate-400 hover:text-white pb-2 px-1 transition-colors"
+          >
+            Overview
+          </Link>
+          <Link
+            to={`/workspaces/${currentWorkspace.id}/schema`}
+            className="text-sm font-medium text-slate-400 hover:text-white pb-2 px-1 transition-colors"
+          >
+            Schema Builder
+          </Link>
+          <span
+            className="text-sm font-bold text-cyan-400 border-b-2 border-cyan-400 pb-2 px-1 cursor-default"
+          >
+            SQL Generator
+          </span>
+        </div>
+      )}
       {/* Page Header */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">

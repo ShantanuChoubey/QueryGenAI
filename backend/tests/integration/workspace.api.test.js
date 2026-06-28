@@ -29,6 +29,15 @@ vi.mock('../../src/config/db.js', () => ({
       update: vi.fn(),
       delete: vi.fn(),
     },
+    table: {
+      count: vi.fn().mockResolvedValue(0),
+    },
+    column: {
+      count: vi.fn().mockResolvedValue(0),
+    },
+    relationship: {
+      count: vi.fn().mockResolvedValue(0),
+    },
     $disconnect: vi.fn().mockResolvedValue(undefined),
   },
 }));

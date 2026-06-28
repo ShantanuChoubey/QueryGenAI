@@ -46,7 +46,21 @@ export async function getWorkspace(workspaceId, userId) {
     throw error;
   }
 
-  return workspace;
+  // Fetch counts for schema details dashboard
+  const [tablesCount, columnsCount, relationshipsCount] = await Promise.all([
+    prisma.table.count({ where: { workspaceId } }),
+    prisma.column.count({ where: { table: { workspaceId } } }),
+    prisma.relationship.count({ where: { workspaceId } }),
+  ]);
+
+  return {
+    ...workspace,
+    _count: {
+      tables: tablesCount,
+      columns: columnsCount,
+      relationships: relationshipsCount,
+    },
+  };
 }
 
 /**

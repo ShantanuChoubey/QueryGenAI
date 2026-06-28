@@ -49,19 +49,31 @@ export default function MainLayout() {
               to="/workspaces"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >
+              Dashboard
+            </Link>
+            <Link
+              to="/workspaces"
+              className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
+            >
               Workspaces
             </Link>
             <Link
               to="/dashboard"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >
-              Workspace
+              Generate SQL
             </Link>
             <Link
               to="/history"
               className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
             >
               History
+            </Link>
+            <Link
+              to="/profile"
+              className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200"
+            >
+              Settings
             </Link>
 
             {/* Admin links — only visible to ADMIN role */}
@@ -72,13 +84,7 @@ export default function MainLayout() {
                   to="/admin/users"
                   className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-200"
                 >
-                  Users
-                </Link>
-                <Link
-                  to="/admin/logs"
-                  className="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-200"
-                >
-                  Audit Logs
+                  Admin
                 </Link>
               </>
             )}

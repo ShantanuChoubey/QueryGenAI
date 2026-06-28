@@ -7,6 +7,8 @@ import SQLGeneratorPage from '../pages/SQLGeneratorPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
 import HistoryPage from '../pages/HistoryPage.jsx';
 import WorkspacePage from '../pages/WorkspacePage.jsx';
+import WorkspaceDetailPage from '../pages/WorkspaceDetailPage.jsx';
+import SchemaBuilderPage from '../pages/SchemaBuilderPage.jsx';
 import AdminUsersPage from '../pages/AdminUsersPage.jsx';
 import AdminLogsPage from '../pages/AdminLogsPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
@@ -47,6 +49,14 @@ export const router = createBrowserRouter([
           {
             path: '/workspaces',
             element: <WorkspacePage />,
+          },
+          {
+            path: '/workspaces/:id',
+            element: <WorkspaceDetailPage />,
+          },
+          {
+            path: '/workspaces/:id/schema',
+            element: <SchemaBuilderPage />,
           },
           {
             path: '/profile',
