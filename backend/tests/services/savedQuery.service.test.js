@@ -23,6 +23,15 @@ vi.mock('../../src/config/db.js', () => ({
     workspace: {
       findUnique: vi.fn(),
     },
+    table: {
+      count: vi.fn().mockResolvedValue(0),
+    },
+    column: {
+      count: vi.fn().mockResolvedValue(0),
+    },
+    relationship: {
+      count: vi.fn().mockResolvedValue(0),
+    },
   },
 }));
 

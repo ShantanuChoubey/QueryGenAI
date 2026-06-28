@@ -168,7 +168,7 @@ describe('SQL API Integration Tests', () => {
     };
 
     test('generates SQL using workspace schema context when workspaceId is valid', async () => {
-      prisma.workspace.findUnique.mockResolvedValueOnce(workspaceWithTables);
+      prisma.workspace.findUnique.mockResolvedValue(workspaceWithTables);
       callGemini.mockResolvedValueOnce({
         queries: [
           { sql: 'SELECT * FROM employees;', explanation: 'All employees', ranking: 1 },
@@ -187,7 +187,7 @@ describe('SQL API Integration Tests', () => {
     });
 
     test('returns 404 when workspace does not exist', async () => {
-      prisma.workspace.findUnique.mockResolvedValueOnce(null);
+      prisma.workspace.findUnique.mockResolvedValue(null);
 
       const res = await request(app)
         .post('/api/v1/sql/generate')
@@ -199,7 +199,7 @@ describe('SQL API Integration Tests', () => {
     });
 
     test('returns 403 when workspace belongs to another user', async () => {
-      prisma.workspace.findUnique.mockResolvedValueOnce({
+      prisma.workspace.findUnique.mockResolvedValue({
         ...workspaceWithTables,
         userId: 'other-user-id', // different owner
       });

@@ -90,7 +90,14 @@ describe('Workspace Service', () => {
       expect(prisma.workspace.findUnique).toHaveBeenCalledWith({
         where: { id: workspaceId },
       });
-      expect(result).toEqual(mockWorkspace);
+      expect(result).toEqual({
+        ...mockWorkspace,
+        _count: {
+          tables: 0,
+          columns: 0,
+          relationships: 0,
+        },
+      });
     });
 
     test('should throw 404 if workspace does not exist', async () => {

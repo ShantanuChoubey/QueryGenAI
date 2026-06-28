@@ -88,7 +88,7 @@ describe('Workspace API Integration Tests', () => {
 
       expect(res.status).toBe(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toBe('ValidationError');
+      expect(res.body.error.error).toBe('ValidationError');
     });
 
     test('should fail validation on invalid database type', async () => {
@@ -131,7 +131,14 @@ describe('Workspace API Integration Tests', () => {
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(res.status).toBe(200);
-      expect(res.body.data).toEqual(mockWorkspace);
+      expect(res.body.data).toEqual({
+        ...mockWorkspace,
+        _count: {
+          tables: 0,
+          columns: 0,
+          relationships: 0,
+        },
+      });
     });
 
     test('should deny access if not owned by user', async () => {

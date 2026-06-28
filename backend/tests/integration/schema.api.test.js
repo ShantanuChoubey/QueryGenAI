@@ -31,6 +31,7 @@ vi.mock('../../src/config/db.js', () => ({
       findMany: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      count: vi.fn().mockResolvedValue(0),
     },
     column: {
       create: vi.fn(),
@@ -38,6 +39,7 @@ vi.mock('../../src/config/db.js', () => ({
       findMany: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      count: vi.fn().mockResolvedValue(0),
     },
     relationship: {
       create: vi.fn(),
@@ -45,6 +47,7 @@ vi.mock('../../src/config/db.js', () => ({
       findMany: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      count: vi.fn().mockResolvedValue(0),
     },
     $disconnect: vi.fn().mockResolvedValue(undefined),
   },
@@ -94,7 +97,7 @@ describe('Schema Builder API Integration Tests', () => {
 
       expect(res.status).toBe(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.error).toBe('ValidationError');
+      expect(res.body.error.error).toBe('ValidationError');
     });
   });
 
