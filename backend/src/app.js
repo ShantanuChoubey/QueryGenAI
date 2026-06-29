@@ -12,8 +12,6 @@ import savedQueryRouter from './routes/savedQuery.js';
 import { generalLimiter, aiLimiter } from './middleware/rateLimiter.js';
 import { requestIdMiddleware } from './middleware/requestId.js';
 import { requestLogger } from './middleware/requestLogger.js';
-import fs from 'fs';
-import path from 'path';
 
 const app = express();
 
@@ -79,25 +77,6 @@ app.use((err, req, res, _next) => {
   const status = err.status || 500;
   const message = err.message || 'An unexpected error occurred.';
   const error = err.name || 'InternalServerError';
-  
-  if (process.env.NODE_ENV === 'test') {
-    try {
-      fs.appendFileSync(
-        path.join(process.cwd(), 'error_debug.log'),
-        `[${new Date().toISOString()}] ${err.stack}\n\n`
-      );
-    } catch (e) {
-      console.error('Failed to write debug log', e);
-    }
-
-    return res.status(status).json({
-      success: false,
-      requestId: res.req?.requestId || null,
-      message,
-      error,
-      stack: err.stack,
-    });
-  }
   
   return errorResponse(res, status, message, error);
 });
