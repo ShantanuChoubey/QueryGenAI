@@ -77,6 +77,16 @@ app.use((err, req, res, _next) => {
   const status = err.status || 500;
   const message = err.message || 'An unexpected error occurred.';
   const error = err.name || 'InternalServerError';
+  
+  if (process.env.NODE_ENV === 'test') {
+    return res.status(status).json({
+      success: false,
+      message,
+      error,
+      stack: err.stack,
+    });
+  }
+  
   return errorResponse(res, status, message, error);
 });
 
