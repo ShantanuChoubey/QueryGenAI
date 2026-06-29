@@ -12,6 +12,7 @@ import SchemaBuilderPage from '../pages/SchemaBuilderPage.jsx';
 import SavedQueriesPage from '../pages/SavedQueriesPage.jsx';
 import AdminUsersPage from '../pages/AdminUsersPage.jsx';
 import AdminLogsPage from '../pages/AdminLogsPage.jsx';
+import SchemaImportPage from '../pages/SchemaImportPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
 import AdminRoute from '../components/AdminRoute.jsx';
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
           {
             path: '/workspaces/:id/schema',
             element: <SchemaBuilderPage />,
+          },
+          {
+            path: '/workspaces/:id/import',
+            element: <SchemaImportPage />,
           },
           {
             path: '/profile',

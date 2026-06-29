@@ -8,6 +8,9 @@ import { validate } from '../validations/validation.js';
 import { createWorkspaceSchema, updateWorkspaceSchema } from '../validations/workspace.js';
 import { createTableSchema } from '../validations/schema.js';
 
+import * as schemaImportController from '../controllers/schemaImport.controller.js';
+import { handleUpload } from '../middleware/upload.js';
+
 const router = express.Router();
 
 // All routes require authentication
@@ -24,5 +27,11 @@ router.get('/:workspaceId/tables', tableController.listWorkspaceTables);
 router.post('/:workspaceId/tables', validate(createTableSchema), tableController.createTable);
 router.get('/:workspaceId/relationships', relationshipController.listWorkspaceRelationships);
 router.get('/:workspaceId/saved-queries', savedQueryController.list);
+
+// Schema import routes
+router.post('/:workspaceId/import/sql', handleUpload, schemaImportController.previewSql);
+router.post('/:workspaceId/import/json', handleUpload, schemaImportController.previewJson);
+router.post('/:workspaceId/import/csv', handleUpload, schemaImportController.previewCsv);
+router.post('/:workspaceId/import/confirm', schemaImportController.confirmImport);
 
 export default router;

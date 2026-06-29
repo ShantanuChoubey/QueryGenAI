@@ -191,20 +191,55 @@ export default function WorkspaceDetailPage() {
         </div>
       </div>
 
-      {/* Action CTA Panel */}
-      <div className="bg-gradient-to-tr from-cyan-950/20 via-slate-900/40 to-purple-950/20 border border-slate-800 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
-        <div className="space-y-2">
-          <h2 className="text-xl font-bold text-white">Design & Configure Schema Metadata</h2>
-          <p className="text-sm text-slate-400 max-w-lg">
-            Access the visual Schema Builder to construct tables, columns, and foreign keys. This schema is compiled to construct specialized context prompts for your SQL queries.
-          </p>
+      {/* Action CTA Panels */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Schema Builder CTA */}
+        <div className="bg-gradient-to-tr from-cyan-950/20 via-slate-900/40 to-purple-950/20 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between gap-6 shadow-2xl">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-8 w-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                <svg className="h-4 w-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
+                </svg>
+              </div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Visual Builder</span>
+            </div>
+            <h2 className="text-lg font-bold text-white">Design Schema Manually</h2>
+            <p className="text-sm text-slate-400">
+              Add tables, columns, and foreign-key relationships through the interactive visual editor.
+            </p>
+          </div>
+          <Link
+            to={`/workspaces/${id}/schema`}
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/10"
+          >
+            Open Schema Builder →
+          </Link>
         </div>
-        <Link
-          to={`/workspaces/${id}/schema`}
-          className="px-6 py-3 rounded-xl text-sm font-semibold bg-cyan-500 text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/10 shrink-0"
-        >
-          Open Schema Builder
-        </Link>
+
+        {/* Import Schema CTA */}
+        <div className="bg-gradient-to-tr from-purple-950/20 via-slate-900/40 to-cyan-950/20 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between gap-6 shadow-2xl">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-8 w-8 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                <svg className="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+              </div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Fast Import</span>
+            </div>
+            <h2 className="text-lg font-bold text-white">Import from File</h2>
+            <p className="text-sm text-slate-400">
+              Upload a SQL DDL file, JSON schema, or CSV matrix to instantly scaffold your entire schema.
+            </p>
+          </div>
+          <Link
+            to={`/workspaces/${id}/import`}
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-purple-600 hover:bg-purple-500 text-white transition-colors shadow-lg shadow-purple-500/10"
+          >
+            Import Schema →
+          </Link>
+        </div>
       </div>
 
       {/* Edit Modal */}
