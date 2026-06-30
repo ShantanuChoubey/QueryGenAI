@@ -99,6 +99,12 @@ export default function WorkspaceDetailPage() {
           Schema Builder
         </Link>
         <Link
+          to={`/workspaces/${id}/diagram`}
+          className="text-sm font-medium text-slate-400 hover:text-white pb-2 px-1 transition-colors"
+        >
+          ER Diagram
+        </Link>
+        <Link
           to="/dashboard"
           className="text-sm font-medium text-slate-400 hover:text-white pb-2 px-1 transition-colors"
         >
@@ -192,7 +198,7 @@ export default function WorkspaceDetailPage() {
       </div>
 
       {/* Action CTA Panels */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Schema Builder CTA */}
         <div className="bg-gradient-to-tr from-cyan-950/20 via-slate-900/40 to-purple-950/20 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between gap-6 shadow-2xl">
           <div className="space-y-2">
@@ -238,6 +244,30 @@ export default function WorkspaceDetailPage() {
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-purple-600 hover:bg-purple-500 text-white transition-colors shadow-lg shadow-purple-500/10"
           >
             Import Schema →
+          </Link>
+        </div>
+
+        {/* ER Diagram CTA */}
+        <div className="bg-gradient-to-tr from-indigo-950/20 via-slate-900/40 to-violet-950/20 border border-slate-800 rounded-2xl p-8 flex flex-col justify-between gap-6 shadow-2xl">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-8 w-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                <svg className="h-4 w-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M7.5 3.75H6A2.25 2.25 0 003.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0120.25 6v1.5m0 9V18A2.25 2.25 0 0118 20.25h-1.5M3.75 16.5V18A2.25 2.25 0 006 20.25h1.5" />
+                </svg>
+              </div>
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Visualise</span>
+            </div>
+            <h2 className="text-lg font-bold text-white">View ER Diagram</h2>
+            <p className="text-sm text-slate-400">
+              Explore an interactive, pannable Entity Relationship diagram of your entire schema.
+            </p>
+          </div>
+          <Link
+            to={`/workspaces/${id}/diagram`}
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors shadow-lg shadow-indigo-500/10"
+          >
+            Open ER Diagram →
           </Link>
         </div>
       </div>

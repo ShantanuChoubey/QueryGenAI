@@ -13,6 +13,7 @@ import SavedQueriesPage from '../pages/SavedQueriesPage.jsx';
 import AdminUsersPage from '../pages/AdminUsersPage.jsx';
 import AdminLogsPage from '../pages/AdminLogsPage.jsx';
 import SchemaImportPage from '../pages/SchemaImportPage.jsx';
+import ERDiagramPage from '../pages/ERDiagramPage.jsx';
 import NotFoundPage from '../pages/NotFoundPage.jsx';
 import ProtectedRoute from '../components/ProtectedRoute.jsx';
 import AdminRoute from '../components/AdminRoute.jsx';
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
           {
             path: '/workspaces/:id/import',
             element: <SchemaImportPage />,
+          },
+          {
+            path: '/workspaces/:id/diagram',
+            element: <ERDiagramPage />,
           },
           {
             path: '/profile',

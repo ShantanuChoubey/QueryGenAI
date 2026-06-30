@@ -10,6 +10,7 @@ import { createTableSchema } from '../validations/schema.js';
 
 import * as schemaImportController from '../controllers/schemaImport.controller.js';
 import { handleUpload } from '../middleware/upload.js';
+import * as diagramController from '../controllers/diagram.controller.js';
 
 const router = express.Router();
 
@@ -33,5 +34,8 @@ router.post('/:workspaceId/import/sql', handleUpload, schemaImportController.pre
 router.post('/:workspaceId/import/json', handleUpload, schemaImportController.previewJson);
 router.post('/:workspaceId/import/csv', handleUpload, schemaImportController.previewCsv);
 router.post('/:workspaceId/import/confirm', schemaImportController.confirmImport);
+
+// ER Diagram route (read-only)
+router.get('/:workspaceId/diagram', diagramController.getDiagram);
 
 export default router;
