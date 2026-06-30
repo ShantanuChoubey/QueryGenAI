@@ -1,5 +1,4 @@
 import { getWorkspaceDiagram } from '../services/diagram.service.js';
-import logger from '../config/logger.js';
 
 /**
  * GET /api/v1/workspaces/:workspaceId/diagram
@@ -18,7 +17,7 @@ export async function getDiagram(req, res, next) {
       data: diagram,
     });
   } catch (err) {
-    logger.error({ err }, 'Failed to fetch workspace diagram');
     next(err);
   }
 }
+
